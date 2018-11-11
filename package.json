@@ -9,6 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "twitter-js-client": "0.0.5",
+    "twitter-node-client": "0.0.6",
     "uuid": "^3.3.2"
   }
 }

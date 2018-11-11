@@ -1,8 +1,7 @@
 const uuid = require('uuid/v4');
 
 var request = require('request');
-var consumer_key = 'mVxcHA7QHGmC7ASzjk90mIrdH';
-var consumer_secret = '32VHBstVaNH9d0gS04XeGIm3GyR8x5Cox6YJMW2d1y1kSBY70n';
+
 var enc_secret = new Buffer(consumer_key + ':' + consumer_secret).toString('base64');
 var oauthOptions = {
   url: 'https://api.twitter.com/oauth2/token',
@@ -18,23 +17,25 @@ const getAccesToken = () => {
   });
 };
 
-const ACCCESS_TOKEN = 'AAAAAAAAAAAAAAAAAAAAAHlS8wAAAAAAiZzEweag9We%2FtxAczLAJvHiL7Pc%3DooMdoimTqnm36iIkn8WGphEE3hFfPQIMvT9LKRwCYCy8biIZ0R';
 
 
 
-var timeline_url = 'https://api.twitter.com/1.1/statuses/user_timeline';
+
+var timeline_url = 'https://api.twitter.com/1.1/statuses/user_timeline.json';
 var search_url = 'https://api.twitter.com/1.1/search/tweets.json'; //?q=%40losant&include_entities=false ';
-const screen_name = 'twitterapi';
+const screen_name = 'rhoen2009';
 var seen = [];
 
 var reqParams = {
-  url: search_url,
+  url: timeline_url,
   headers: { 
     'Authorization': 'Bearer ' + ACCCESS_TOKEN
   },
+  // headers: {
+
+  // },
   qs: {
     q: `@${screen_name}`,
-    include_entities: false,
     count: 3
   }
 };
@@ -45,8 +46,38 @@ const pollTwitter = () => {
       console.log('ERROR', e);
       return;
     }
+    if (r) {
+      console.log('RESPONSE', r);
+      return;
+    }
     console.log(body);
   });
 }
 
-pollTwitter();
+//pollTwitter();
+
+//Callback functions
+var error = function (err, response, body) {
+  console.log('ERROR [%s]', err);
+};
+var success = function (data) {
+  console.log('Data [%s]', data);
+};
+
+const TwitterJSClient = require('twitter-js-client');
+const Twitter = TwitterJSClient.Twitter;
+
+//Get this data from your twitter apps dashboard
+var config = {
+  "consumerKey": consumer_key,
+  "consumerSecret": consumer_secret,
+  "accessToken": accessToken,
+  "accessTokenSecret": accessTokenSecret,
+  //"callBackUrl": "XXX"
+}
+
+var twitter = new Twitter(config);
+
+twitter.getUserTimeline({ screen_name, count: '10' }, error, success);
+
+
